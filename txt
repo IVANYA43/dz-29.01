@@ -1,0 +1,80 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <unordered_set>
+#include <cstdlib>
+#include <ctime>
+
+using namespace std;
+
+int main() {
+    setlocale(LC_ALL, "Russian");
+
+    // Чтение файла и подсчёт количества строк
+    ifstream inFile("example.txt");
+    if (inFile.is_open()) {
+        int lineCount = 0;
+        string line;
+        while (getline(inFile, line)) {
+            lineCount++;
+        }
+        cout << "Количество строк в файле: " << lineCount << endl;
+        inFile.close();
+    }
+
+    // Чтение файла и подсчёт гласных в каждой строке
+    unordered_set<char> vowels = { 'а', 'е', 'ё', 'и', 'о', 'у', 'ы', 'э', 'ю', 'я',
+                                  'А', 'Е', 'Ё', 'И', 'О', 'У', 'Ы', 'Э', 'Ю', 'Я' };
+    inFile.open("example.txt");
+    if (inFile.is_open()) {
+        string line;
+        int lineNumber = 1;
+        while (getline(inFile, line)) {
+            int vowelCount = 0;
+            for (char c : line) {
+                if (vowels.find(c) != vowels.end()) {
+                    vowelCount++;
+                }
+            }
+            cout << "Строка " << lineNumber << ": " << vowelCount << " гласных" << endl;
+            lineNumber++;
+        }
+        inFile.close();
+    }
+
+    // Генерация случайных чисел и запись их в файл
+    ofstream outFile1("file1.txt");
+    if (outFile1.is_open()) {
+        srand(time(0));
+        for (int i = 0; i < 10; i++) {
+            int randomNumber = rand() % 100;
+            outFile1 << randomNumber << endl;
+        }
+        outFile1.close();
+    }
+
+    // Чтение из одного файла и запись в другой
+    inFile.open("file1.txt");
+    ofstream outFile2("file2.txt");
+    if (inFile.is_open() && outFile2.is_open()) {
+        string line;
+        while (getline(inFile, line)) {
+            outFile2 << line << endl;
+        }
+        inFile.close();
+        outFile2.close();
+    }
+
+    // Открытие файла в конце программы
+    inFile.open("file2.txt");
+    if (inFile.is_open()) {
+        string line;
+        cout << "Содержимое файла file2.txt:" << endl;
+        while (getline(inFile, line)) {
+            cout << line << endl;
+        }
+        inFile.close();
+    }
+
+    return 0;
+}
